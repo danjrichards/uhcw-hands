@@ -20,6 +20,10 @@
     border-radius: 8px;
 }
 
+.content-section {
+    display: none;
+}
+
 #svg_hands {
     position: absolute;
     top: 0;
