@@ -74,15 +74,7 @@ function textClickHandler(groupId) {
 }
 
 // Initialize when DOM is loaded
-document.addEventListener("DOMContentLoaded", () => {
-    const iframe = document.getElementById("userHtmlFrame")
-    console.log(`iframe: ${iframe.clientWidth} x ${iframe.clientHeight}`)
-
-    // Add resize listener
-    window.addEventListener('resize', () => {
-        console.log(`iframe (resized): ${iframe.clientWidth} x ${iframe.clientHeight}`)
-    })
-    
+document.addEventListener("DOMContentLoaded", () => {   
     const shapes = document.querySelectorAll("#svg_hands g g")
     shapes.forEach(shape => {
         try {
