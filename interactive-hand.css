@@ -21,8 +21,11 @@
 }
 
 #svg_hands {
+    position: absolute;
+    top: 0;
     width: 100%;
     height: auto;
+    width: 600px;
     max-width: 600px;
 }
 

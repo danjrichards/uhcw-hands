@@ -1,88 +1,96 @@
 // Helper function to strip unwanted tags from content
 function stripTags(content) {
-    return content.replace(/\n/g, '').replace(/<p>/g, '').replace(/<\/p>/g, '');
+    return content.replace(/\n/g, '').replace(/<p>/g, '').replace(/<\/p>/g, '')
 }
 
 function updateText(id) {
-    const target = document.querySelector('.hand-pathways-content');
-    let content = '';
+    const target = document.querySelector('.hand-pathways-content')
+    let content = ''
 
     // Check for callout
-    const callout = document.getElementById('hand-callout');
+    const callout = document.getElementById('hand-callout')
     if (callout) {
-        content += `<div class="hand-callout">${stripTags(callout.innerHTML)}</div>`;
+        content += `<div class="hand-callout">${stripTags(callout.innerHTML)}</div>`
     }
 
     // Check if any region is highlighted
     if (document.querySelector("#svg_hands g g.highlight")) {
-        const template = document.getElementById(`t-${id}`);
-        content += stripTags(template.innerHTML);
+        const template = document.getElementById(`t-${id}`)
+        content += stripTags(template.innerHTML)
     } else {
         // Build table of contents
-        content += '<p class="meta-item">Click on a shape or one of the text links below to see appropriate pathways here.</p>';
-        content += '<ul>';
+        content += '<p class="meta-item">Click on a shape or one of the text links below to see appropriate pathways here.</p>'
+        content += '<ul>'
         
-        const templates = document.querySelectorAll("script[type='text/template']");
+        const templates = document.querySelectorAll("script[type='text/template']")
         templates.forEach(template => {
-            const parentId = template.id.substring(2); // Remove 't-' prefix
-            const templateContent = template.innerHTML;
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = templateContent;
+            const parentId = template.id.substring(2) // Remove 't-' prefix
+            const templateContent = template.innerHTML
+            const tempDiv = document.createElement('div')
+            tempDiv.innerHTML = templateContent
             
-            const heading = tempDiv.querySelector('h4');
+            const heading = tempDiv.querySelector('h4')
             const subheadings = Array.from(tempDiv.querySelectorAll('span'))
-                .map(span => span.innerHTML);
+                .map(span => span.innerHTML)
 
             if (heading) {
                 content += `<li class="hands-toc">
-                    <a href="javascript:void(0);" onclick="textClickHandler('${parentId}')">${heading.innerHTML}</a>`;
+                    <a href="javascript:void(0)" onclick="textClickHandler('${parentId}')">${heading.innerHTML}</a>`
                 
                 if (subheadings.length > 0) {
-                    content += `<div class="subheadings">${subheadings.join('<br>')}</div>`;
+                    content += `<div class="subheadings">${subheadings.join('<br>')}</div>`
                 }
                 
-                content += '</li>';
+                content += '</li>'
             }
-        });
+        })
         
-        content += '</ul>';
+        content += '</ul>'
     }
 
-    target.innerHTML = content;
+    target.innerHTML = content
 }
 
 function clickHandler(group) {
-    const alreadyHighlighted = group.classList.contains("highlight");
+    const alreadyHighlighted = group.classList.contains("highlight")
     
     // Remove highlight from all groups
     document.querySelectorAll("#svg_hands g g").forEach(g => {
-        g.classList.remove("highlight");
-    });
+        g.classList.remove("highlight")
+    })
     
     if (!alreadyHighlighted) {
-        group.classList.add("highlight");
+        group.classList.add("highlight")
     }
 
-    updateText(group.id);
+    updateText(group.id)
 }
 
 function textClickHandler(groupId) {
-    const group = document.getElementById(groupId);
+    const group = document.getElementById(groupId)
     if (group) {
-        clickHandler(group);
+        clickHandler(group)
     }
 }
 
 // Initialize when DOM is loaded
 document.addEventListener("DOMContentLoaded", () => {
-    const shapes = document.querySelectorAll("#svg_hands g g");
+    const iframe = document.getElementById("userHtmlFrame")
+    console.log(`iframe: ${iframe.clientWidth} x ${iframe.clientHeight}`)
+
+    // Add resize listener
+    window.addEventListener('resize', () => {
+        console.log(`iframe (resized): ${iframe.clientWidth} x ${iframe.clientHeight}`)
+    })
+    
+    const shapes = document.querySelectorAll("#svg_hands g g")
     shapes.forEach(shape => {
         try {
-            shape.addEventListener('click', () => clickHandler(shape));
+            shape.addEventListener('click', () => clickHandler(shape))
         } catch (err) {
-            console.error(`Failed to add click handler to [${shape.id}]:`, err);
+            console.error(`Failed to add click handler to [${shape.id}]:`, err)
         }
-    });
+    })
 
-    updateText('init');
-});
+    updateText('init')
+})
